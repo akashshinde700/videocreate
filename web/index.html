@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vaanireel Web Studio</title>
+<style>
+  :root {
+    --bg: #0b1120; --card: #111a2e; --card2: #16213c; --line: #233252;
+    --txt: #e2e8f0; --mut: #94a3b8; --acc: #3b82f6; --ok: #22c55e; --warn: #eab308;
+    --bad: #ef4444; --brand: #8b5cf6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: radial-gradient(1200px 800px at 70% -10%, #1e293b 0%, var(--bg) 55%);
+    color: var(--txt); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh; padding: 24px;
+  }
+  header { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; flex-wrap: wrap; }
+  header h1 { font-size: 22px; letter-spacing: .3px; }
+  header h1 span { color: var(--brand); }
+  .pill { font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--mut); }
+  .pill.ok { color: var(--ok); border-color: var(--ok); }
+  .pill.bad { color: var(--bad); border-color: var(--bad); }
+  main { display: grid; grid-template-columns: 380px 1fr; gap: 20px; max-width: 1280px; margin: 0 auto; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .card h2 { font-size: 15px; margin-bottom: 14px; color: var(--mut); font-weight: 600; text-transform: uppercase; letter-spacing: .8px; }
+  label { display: block; font-size: 12px; color: var(--mut); margin: 12px 0 6px; }
+  input[type=text], input[type=number], select {
+    width: 100%; background: var(--card2); color: var(--txt); border: 1px solid var(--line);
+    border-radius: 8px; padding: 10px 12px; font-size: 14px; outline: none;
+  }
+  input:focus, select:focus { border-color: var(--acc); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .checks { display: flex; gap: 18px; margin-top: 14px; font-size: 13px; color: var(--txt); }
+  .checks label { display: flex; align-items: center; gap: 8px; margin: 0; }
+  button {
+    width: 100%; margin-top: 16px; padding: 12px; border: 0; border-radius: 10px;
+    background: linear-gradient(90deg, var(--acc), var(--brand)); color: #fff;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+  }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  button.ghost { background: var(--card2); border: 1px solid var(--line); color: var(--txt); font-weight: 500; margin-top: 10px; font-size: 13px; }
+  #progress-wrap { height: 8px; background: var(--card2); border-radius: 999px; overflow: hidden; margin: 12px 0; }
+  #progress { height: 100%; width: 0%; background: linear-gradient(90deg, var(--acc), var(--brand)); transition: width .4s; }
+  #log {
+    background: #0a0f1e; border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px; font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 11.5px; color: var(--mut); height: 220px; overflow-y: auto; white-space: pre-wrap;
+  }
+  #log .err { color: var(--bad); }
+  #result { display: none; }
+  #result.show { display: block; }
+  video { width: 100%; max-height: 430px; border-radius: 10px; background: #000; margin-bottom: 14px; }
+  .badge { display: inline-block; font-size: 12px; padding: 4px 12px; border-radius: 999px; margin-bottom: 12px; }
+  .badge.high { background: #7f1d1d; color: #fecaca; }
+  .badge.low { background: #14532d; color: #bbf7d0; }
+  .thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin: 14px 0; }
+  .thumbs img { width: 100%; border-radius: 8px; border: 1px solid var(--line); }
+  .tips { list-style: none; }
+  .tips li { font-size: 13px; color: var(--mut); padding: 6px 0; border-bottom: 1px dashed var(--line); }
+  .tips li::before { content: "💡 "; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  td, th { padding: 7px 8px; border-bottom: 1px solid var(--line); text-align: left; color: var(--txt); }
+  th { color: var(--mut); font-weight: 600; font-size: 12px; }
+  .hidden { display: none; }
+  footer { max-width: 1280px; margin: 20px auto 0; color: var(--mut); font-size: 12px; text-align: center; }
+  .report-meta { font-size: 13px; color: var(--mut); line-height: 1.8; }
+  .report-meta b { color: var(--txt); }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎬 Vaanireel <span>Web Studio</span></h1>
+  <div id="ff-pill" class="pill">ffmpeg checking…</div>
+  <div class="pill" id="ver-pill">video_creator.py</div>
+</header>
+
+<main>
+  <section class="card" id="form-card">
+    <h2>Render naya video</h2>
+    <label for="topic">Topic</label>
+    <input type="text" id="topic" placeholder="jaise: 6gb gpu guide" maxlength="120">
+
+    <div class="row">
+      <div>
+        <label for="lang">Language</label>
+        <select id="lang">
+          <option value="hi">Hinglish (hi)</option>
+          <option value="en">English (en)</option>
+        </select>
+      </div>
+      <div>
+        <label for="scenes">Scenes (3–6)</label>
+        <input type="number" id="scenes" min="3" max="6" value="3">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="visual">Visual mode</label>
+        <select id="visual">
+          <option value="cards">Cards (default)</option>
+          <option value="stock">Stock footage</option>
+        </select>
+      </div>
+      <div>
+        <label for="size">Size</label>
+        <select id="size">
+          <option value="horizontal">Horizontal 1920×1080</option>
+          <option value="vertical">Vertical 1080×1920</option>
+          <option value="square">Square 1080×1080</option>
+        </select>
+      </div>
+    </div>
+
+    <label for="engine">Voice engine</label>
+    <select id="engine">
+      <option value="auto">Auto ladder (voicestudio→edge→piper→silent)</option>
+      <option value="edge">edge-tts</option>
+      <option value="voicestudio">VoiceStudio app</option>
+      <option value="piper">piper</option>
+      <option value="silent">Silent stub (fast test)</option>
+    </select>
+
+    <div class="checks">
+      <label><input type="checkbox" id="captions" checked> Captions burn</label>
+      <label><input type="checkbox" id="music"> Music</label>
+    </div>
+
+    <button id="btn-render">🚀 Render karo</button>
+    <button class="ghost" id="btn-doctor">🩺 Doctor — system check</button>
+    <button class="ghost" id="btn-audit">📋 Audit — 17 repos table</button>
+  </section>
+
+  <section class="card" id="output-card">
+    <h2>Job status</h2>
+    <div id="progress-wrap"><div id="progress"></div></div>
+    <div id="log">Job start hone pe live log yahan dikhega…</div>
+
+    <div id="result">
+      <h2 style="margin-top:18px">Result</h2>
+      <div id="risk"></div>
+      <video id="video" controls></video>
+      <div id="report-meta" class="report-meta"></div>
+      <div class="thumbs" id="thumbs"></div>
+      <ul class="tips" id="tips"></ul>
+    </div>
+
+    <div id="doctor-panel" class="hidden" style="margin-top:18px">
+      <h2>Doctor</h2>
+      <table id="doctor-table"></table>
+    </div>
+    <div id="audit-panel" class="hidden" style="margin-top:18px">
+      <h2>Audit — 17 repos</h2>
+      <table id="audit-table"></table>
+    </div>
+  </section>
+</main>
+
+<footer id="hw-note">6GB VRAM / 16GB RAM safe — heavy generation cloud/app me (optional)</footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+// health pill
+fetch('/api/health').then(r => r.json()).then(h => {
+  const p = $('ff-pill');
+  p.textContent = h.ffmpeg ? 'ffmpeg ✓' : 'ffmpeg ✗';
+  p.className = 'pill ' + (h.ffmpeg ? 'ok' : 'bad');
+  $('ver-pill').textContent = 'video_creator.py v' + h.tool;
+}).catch(() => { $('ff-pill').textContent = 'server unreachable'; $('ff-pill').className = 'pill bad'; });
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function renderTable(rows, el, cols) {
+  el.innerHTML = '<tr>' + cols.map(c => `<th>${c.h}</th>`).join('') + '</tr>' +
+    rows.map(r => '<tr>' + cols.map(c => `<td>${esc(String(r[c.k] ?? ''))}</td>`).join('') + '</tr>').join('');
+}
+
+$('btn-doctor').onclick = async () => {
+  $('audit-panel').classList.add('hidden');
+  $('doctor-panel').classList.remove('hidden');
+  const { rows } = await (await fetch('/api/doctor')).json();
+  const icon = { ok: '✅', warn: '⚠️', fail: '❌' };
+  $('doctor-table').innerHTML = '<tr><th>Check</th><th>Status</th><th>Detail</th><th>Hint</th></tr>' +
+    rows.map(r => `<tr><td>${esc(r.name)}</td><td>${icon[r.status] || ''}</td><td>${esc(r.note)}</td><td>${esc(r.hint || '')}</td></tr>`).join('');
+};
+
+$('btn-audit').onclick = async () => {
+  $('doctor-panel').classList.add('hidden');
+  $('audit-panel').classList.remove('hidden');
+  const { rows } = await (await fetch('/api/audit')).json();
+  renderTable(rows, $('audit-table'), [
+    { h: 'Repo', k: 'repo' }, { h: 'Role', k: 'role' }, { h: 'Status', k: 'status' }, { h: 'Note', k: 'note' }]);
+};
+
+async function poll(id) {
+  const s = await (await fetch('/api/status?id=' + encodeURIComponent(id))).json();
+  $('log').textContent = (s.log || []).join('\n') || '…';
+  $('log').scrollTop = $('log').scrollHeight;
+  $('progress').style.width = (s.progress || 0) + '%';
+  if (s.state === 'running') { setTimeout(() => poll(id), 900); return; }
+  $('btn-render').disabled = false;
+  if (s.state === 'error') {
+    $('log').innerHTML = (s.log || []).map(l => esc(l)).join('\n') + '\n<span class="err">✗ ' + esc(s.error || 'render failed') + '</span>';
+    return;
+  }
+  const r = s.report;
+  if (!r) return;
+  $('result').classList.add('show');
+  $('risk').innerHTML = `<span class="badge ${(r.quality.slideshow_risk || 'LOW').toLowerCase()}">slideshow risk: ${esc(r.quality.slideshow_risk)}</span>`;
+  $('video').src = `/media?job=${encodeURIComponent(id)}&name=vaanireel_video.mp4&t=${Date.now()}`;
+  $('video').load();
+  $('report-meta').innerHTML =
+    `<b>${esc(r.topic)}</b> — ${r.quality.total_s}s · voice: ${esc(r.voice_engine)} · visuals: ${esc(r.visual_mode)} · ${r.scenes.length} scenes · render ${r.render_s}s`;
+  $('thumbs').innerHTML = r.scenes.map(sc =>
+    `<img src="/media?job=${encodeURIComponent(id)}&name=${encodeURIComponent(sc.visual)}" alt="scene ${sc.idx}">`).join('');
+  $('tips').innerHTML = (r.quality.tips || []).map(t => `<li>${esc(t)}</li>`).join('');
+}
+
+$('btn-render').onclick = async () => {
+  const topic = $('topic').value.trim();
+  if (!topic) { $('log').innerHTML = '<span class="err">⚠ Topic likho pehle!</span>'; return; }
+  $('btn-render').disabled = true;
+  $('result').classList.remove('show');
+  $('doctor-panel').classList.add('hidden');
+  $('audit-panel').classList.add('hidden');
+  $('progress').style.width = '5%';
+  $('log').textContent = 'job start ho raha hai…';
+  try {
+    const res = await fetch('/api/render', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topic,
+        lang: $('lang').value,
+        scenes: parseInt($('scenes').value, 10),
+        visual: $('visual').value,
+        size: $('size').value,
+        engine: $('engine').value,
+        captions: $('captions').checked,
+        music: $('music').checked,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      $('log').innerHTML = '<span class="err">✗ ' + esc(data.error || 'start failed') + '</span>';
+      $('btn-render').disabled = false;
+      return;
+    }
+    poll(data.id);
+  } catch (e) {
+    $('log').innerHTML = '<span class="err">✗ network error: ' + esc(String(e)) + '</span>';
+    $('btn-render').disabled = false;
+  }
+};
+</script>
+</body>
+</html>

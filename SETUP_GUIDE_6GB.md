@@ -7,6 +7,18 @@
 
 ---
 
+## Step 0 — Ek line install (recommended)
+
+```bash
+pip install -r requirements.txt
+```
+
+Ye pillow + numpy + edge-tts + `imageio-ffmpeg` (fallback ffmpeg) install karta hai.
+FFmpeg system me nahi hai to bundled binary automatically use hota hai —
+alag se `winget install Gyan.FFmpeg` optional hai (thoda faster).
+
+---
+
 ## Step 1 — video_creator.py (MAIN, zaroori)
 
 Ye file hi poora pipeline hai: script → voice → visuals → captions → FFmpeg → MP4.
@@ -105,7 +117,37 @@ python video_creator.py "topic" --engine piper --piper-model ./model.onnx  # ful
 
 ## Troubleshooting
 
-- **"ffmpeg nahi mila"** → install karke terminal dobara kholo (PATH me hona chahiye)
+- **"ffmpeg nahi mila"** → install karke terminal dobara kholo (PATH me hona chahiye) —
+  ya bas `pip install imageio-ffmpeg` (bundled ffmpeg fallback automatic)
 - **Voice silent aayi** → `pip install edge-tts` chalao, ya VoiceStudio app chalu rakho
 - **Devanagari captions** → Noto Devanagari font install ho to auto use hoga (optional)
 - Kisi bhi waqt `--doctor` chalao — har missing cheez ka hint milta hai
+
+---
+
+## Step 4 — Web Studio (browser UI, optional)
+
+```bash
+python app.py
+# → http://localhost:8788
+```
+
+Browser me topic likho → Render → live log + progress + video player + quality tips.
+Doctor aur Audit panels UI me bhi hain. Koi extra dependency nahi (pure stdlib).
+
+---
+
+## Step 5 — Tests (dev)
+
+```bash
+pip install pytest
+python -m pytest tests/ -v        # 19 unit tests
+
+npm install                       # @playwright/test + @sparticuz/chromium
+npx playwright test               # 9 e2e tests (Web Studio UI + API + security)
+```
+
+E2e browser nahi mila to `npx playwright install chromium` chalao — warna Linux pe
+npm wala `@sparticuz/chromium` binary automatically fallback hai.
+
+Poora audit (17 issues → 17 fixes) ke liye **AUDIT.md** dekho.

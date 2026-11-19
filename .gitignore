@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# Node / Playwright
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+
+# pipeline render outputs (artifacts/ me sirf reference samples hain)
+output_*/
+webjobs/
+tmp/
+
+# misc
+*.log
+.DS_Store

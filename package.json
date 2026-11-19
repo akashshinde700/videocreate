@@ -1,0 +1,14 @@
+{
+  "name": "videocreate",
+  "private": true,
+  "version": "1.1.0",
+  "description": "Vaanireel — script→voice→visuals→captions→MP4 pipeline + Web Studio",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:unit": "python3 -m pytest tests/ -v"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@sparticuz/chromium": "^153.0.0"
+  }
+}
