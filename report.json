@@ -1,0 +1,47 @@
+{
+  "tool": "video_creator.py",
+  "version": "1.0.0",
+  "topic": "mock test",
+  "lang": "hi",
+  "voice_engine": "voicestudio",
+  "visual_mode": "cards",
+  "scenes": [
+    {
+      "idx": 1,
+      "title": "Hook",
+      "voice": "voicestudio",
+      "voice_s": 0.9,
+      "dur_s": 2.2,
+      "kind": "image",
+      "visual": "card_1.png"
+    },
+    {
+      "idx": 2,
+      "title": "Point 1",
+      "voice": "voicestudio",
+      "voice_s": 0.9,
+      "dur_s": 2.2,
+      "kind": "image",
+      "visual": "card_2.png"
+    },
+    {
+      "idx": 3,
+      "title": "Outro",
+      "voice": "voicestudio",
+      "voice_s": 0.9,
+      "dur_s": 2.2,
+      "kind": "image",
+      "visual": "card_3.png"
+    }
+  ],
+  "output": "test_vs/vaanireel_video.mp4",
+  "quality": {
+    "total_s": 6.62,
+    "slideshow_risk": "HIGH",
+    "tips": [
+      "Saare visuals cards hain — slideshow feel aa sakta hai. PEXELS_API_KEY ya HIGGSFIELD_API_KEY daalo, ya scenes ko 3-4 hi rakho.",
+      "Captions burn nahi hue — accessibility ke liye --no-captions hata do."
+    ]
+  },
+  "hardware_note": "6GB VRAM / 16GB RAM safe — heavy generation cloud/app me (optional)"
+}

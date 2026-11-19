@@ -1,0 +1,46 @@
+{
+  "tool": "video_creator.py",
+  "version": "1.0.0",
+  "topic": "6gb gpu guide",
+  "lang": "hi",
+  "voice_engine": "edge",
+  "visual_mode": "cards",
+  "scenes": [
+    {
+      "idx": 1,
+      "title": "Hook",
+      "voice": "edge",
+      "voice_s": 8.33,
+      "dur_s": 9.13,
+      "kind": "image",
+      "visual": "card_1.png"
+    },
+    {
+      "idx": 2,
+      "title": "Point 1",
+      "voice": "edge",
+      "voice_s": 8.18,
+      "dur_s": 8.98,
+      "kind": "image",
+      "visual": "card_2.png"
+    },
+    {
+      "idx": 3,
+      "title": "Outro",
+      "voice": "edge",
+      "voice_s": 8.83,
+      "dur_s": 9.63,
+      "kind": "image",
+      "visual": "card_3.png"
+    }
+  ],
+  "output": "test_render2/vaanireel_video.mp4",
+  "quality": {
+    "total_s": 27.77,
+    "slideshow_risk": "HIGH",
+    "tips": [
+      "Saare visuals cards hain — slideshow feel aa sakta hai. PEXELS_API_KEY ya HIGGSFIELD_API_KEY daalo, ya scenes ko 3-4 hi rakho."
+    ]
+  },
+  "hardware_note": "6GB VRAM / 16GB RAM safe — heavy generation cloud/app me (optional)"
+}
